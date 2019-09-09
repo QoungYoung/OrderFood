@@ -1,0 +1,1 @@
+define("list:widget/filter_ab/filter_ab.js",function(o){var e=o("common:widget/ui/cookie/cookie.js");$(function(){var o=$(".w-filter-item-ab"),i=e.get("NUOMI_MEISHI_SCROLLTOP_AB");i&&($(document).scrollTop(i),e.remove("NUOMI_MEISHI_SCROLLTOP_AB")),o.on("click",function(){e.set("NUOMI_MEISHI_SCROLLTOP_AB",$(document).scrollTop().toString())})})});

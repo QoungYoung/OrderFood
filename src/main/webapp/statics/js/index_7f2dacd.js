@@ -1,0 +1,1 @@
+define("list:widget/mis/ad1/index.js",function(i,n){"use strict";n.init=function(){}});

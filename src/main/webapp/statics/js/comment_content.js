@@ -1,0 +1,1 @@
+define("detail:widget/ugc/comment_content/comment_content.js",function(){function n(){$("#j-sort").on("click",function(n){n.stopPropagation(),$("#j-select-box").toggle()}),$("body").on("click",function(){$("#j-select-box").hide()})}function o(){n()}o()});

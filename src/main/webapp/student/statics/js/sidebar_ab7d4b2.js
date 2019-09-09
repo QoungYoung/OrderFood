@@ -1,0 +1,1 @@
+define("list:widget/new_sidebar/sidebar.js",function(e,t){function i(){}e("common:widget/ui/template/template.js").template,e("common:widget/dep/moye/sticky.js");t.init=i});

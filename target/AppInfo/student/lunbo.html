@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <title>Swiper demo</title>
+  <link rel="stylesheet" href="statics/css/swiper.min.css">
+  <style>
+html, body {
+	position: relative;
+	height: 100%;
+	width: 100%;
+}
+body {
+	margin: 0;
+	overflow: hidden;
+}
+#preload{
+	position:absolute;
+	width:100%;
+	height:100%;
+	left:0;
+	top:0;
+	
+	z-index:200;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+.preload-bg{
+	position:absolute;
+	width:100%;
+	height:100%;
+	background:#000;
+	}
+#preload .tip{
+	display:inline;
+	color:#fff;
+	font-size:4vw;
+	text-transform:uppercase;
+	font-weight:bold;
+	line-height:1;
+	position:relative;
+	overflow:hidden;
+}
+.tip-bg{
+	position:absolute;
+	width:0px;
+	height:100%;
+	background:#fff;
+	}
+.swiper-container {
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+}
+#txt {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+}
+.box {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+h2 {
+	cursor: pointer;
+	color: #fff;
+	font-size: 11vw;
+	line-height: 0;
+	letter-spacing: -0.04em;
+	display: inline;
+	position: absolute;
+	max-width: 74.61937%;
+	white-space: normal;
+	left: 0;
+	bottom: calc(50% - 75px);
+	margin-left: 12.69031%;
+}
+
+.swiper-slide h2 {
+	display: none;
+}
+</style>
+  </head>
+  <body>
+<div id="preload"><div class="preload-bg"></div><div class="tip"><div class="tip-bg"></div><span class="tiptxt">今日推荐</span></div></div>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+    <div class="swiper-slide" data-poster="./statics/img/img1.jpg">
+        <h2>扬州炒饭</h2>
+      </div>
+    <div class="swiper-slide" data-poster="./statics/img/img2.jpg">
+        <h2>红烧茄子</h2>
+      </div>
+    <div class="swiper-slide" data-poster="./statics/img/img3.jpg">
+        <h2>糖醋里脊</h2>
+      </div>
+    <div class="swiper-slide" data-poster="./statics/img/img4.jpg">
+        <h2>醋溜白菜</h2>
+      </div>
+  </div>
+    <div id="txt"></div>
+  </div>
+<canvas id="shows" style="position: absolute; left: 0px; top: 0px;"></canvas>
+<script src="statics/js/jquery-1.10.1.min.js"></script>
+<script src="statics/js/swiper.min.js"></script>
+<script src="statics/js/TweenMax.min.js"></script>
+<script>
+    //预加载图片
+    slides = $('.swiper-slide');
+    Img = [];
+    slides.each(function(index, element) {
+    	Img[index] = new Image();
+    	Img[index].src = slides.eq(index).attr('data-poster');
+    	slidesLength = index
+    	//使用附加文本替换virtualTranslate，避免鼠标滚轮失效
+    	$("#txt").append('<div class="box">' + slides.eq(index).html() + '</div>')
+    });
+
+    tweenObj = {
+    	translate: 0
+    };
+    var canvas = document.getElementById("shows");
+    ctx = canvas.getContext("2d");
+    
+	
+	
+    window.onload = function() {
+		
+    	var mySwiper = new Swiper('.swiper-container', {
+    		watchSlidesProgress: true,
+    		//	virtualTranslate:true,较好的解决方案但会导致滚轮失效
+    		mousewheel: true,
+    		grabCursor: true,
+			autoplay: true,
+			speed:700,//限制滚轴时间间隔
+    		on: {
+    			init: function() {
+    				resize(this);
+					/*预加载动画*/
+					tl = new TimelineMax();
+					tl.to(".tip-bg", 0.5, {width:'100%'})
+					  .set(".tiptxt",{autoAlpha:0})
+					  .to(".tip-bg", 0.5, {x:'101%'}, "+=0.2")
+					  .to(".preload-bg", 0.5, {x:'101%'}, "-=0.1")
+					  .set("#preload", {autoAlpha:0})
+    			},
+    			resize: function() {
+    				resize(this);
+    			},
+    			setTranslate: function() {
+    				draw(this, 1);
+    			},
+    		},
+    	});
+    }
+
+    function resize(swiper) {
+
+    	clientWidth = document.body.clientWidth
+    	clientHeight = document.body.clientHeight
+
+    	// 每一个显示块的宽度
+    	blockWidth = clientWidth / 5
+
+    	// 使用的图片大小 720/1280=0.5625	
+		// 图片裁剪区域
+    	if (clientHeight / clientWidth > 0.5625) {
+    		cutWidth = 720 * clientWidth / clientHeight
+    		cutX = (1280 - cutWidth) / 2
+    		cutHeight = 720
+    		cutY = 0
+    	} else {
+    		cutHeight = 1280 * clientHeight / clientWidth
+    		cutY = (720 - cutHeight) / 2
+    		cutWidth = 1280
+    		cutX = 0
+    	}
+
+    	canvas.width = clientWidth;
+    	canvas.height = clientHeight;
+
+    	draw(swiper);
+
+    }
+
+    function draw(swiper, speed) {
+
+    	if (typeof(speed) == "undefined") {
+    		speed = 0.3;
+    	}
+
+    	TweenMax.killAll();
+
+    	TweenMax.to(tweenObj, speed, {tlanslate: swiper.translate, ease: Power4.easeOut, onUpdate: function() {
+
+    			//如果超出显示范围添加黑色背景
+    			if (swiper.progress < 0 || swiper.progress > 1) {
+    				ctx.fillStyle = "#000000";
+    				ctx.fillRect(0, 0, clientWidth, clientHeight);
+    			}
+
+    			tlanslate = tweenObj.tlanslate
+
+    			for (i = 0; i <= slidesLength; i++) {
+					
+					
+    				percent = -tlanslate / clientWidth - i
+					
+    				if (Math.abs(percent) <= 1 ) {
+						
+						n2scale = 2 - Math.abs(percent) * 2
+						if (n2scale > 1) {
+							n2scale = 1
+						}
+						n1scale = 1 - Math.abs(percent) * 2
+						if (n1scale < 0) {
+							n1scale = 0
+						}
+	
+						//画5个块，裁剪出位移差
+						ctx.drawImage(Img[i], cutX + cutWidth * percent * 0.2 + cutWidth / 5 * Math.abs(percent) * 2, cutY, cutWidth / 5 * n1scale, cutHeight, (clientWidth * i + tlanslate) * 0.6 + blockWidth * (1 - n1scale), 0, blockWidth * n1scale, clientHeight);
+						ctx.drawImage(Img[i], cutX + cutWidth / 5 - cutWidth * percent * 0.1 + cutWidth / 5 - cutWidth / 5 * n2scale, cutY, cutWidth / 5 * n2scale, cutHeight, (clientWidth * i + tlanslate) * 0.6 + blockWidth + blockWidth - blockWidth * n2scale, 0, blockWidth * n2scale, clientHeight);
+						ctx.drawImage(Img[i], cutX + cutWidth / 5 * 2 - cutWidth * percent * 0.4, cutY, cutWidth / 5, cutHeight, (clientWidth * i + tlanslate) * 0.6 + blockWidth * 2, 0, blockWidth, clientHeight);
+						ctx.drawImage(Img[i], cutX + cutWidth / 5 * 3 - cutWidth * percent * 0.1, cutY, cutWidth / 5 * n2scale, cutHeight, (clientWidth * i + tlanslate) * 0.6 + blockWidth * 3, 0, blockWidth * n2scale, clientHeight);
+						ctx.drawImage(Img[i], cutX + cutWidth / 5 * 4 + cutWidth * percent * 0.2, cutY, cutWidth / 5 * n1scale, cutHeight, (clientWidth * i + tlanslate) * 0.6 + blockWidth * 4, 0, blockWidth * n1scale, clientHeight);
+                    }
+
+    				//设置文字相对位置，右边缩进0.8，左边加大1.2倍
+    				modifer = 1
+    				if (i > -tlanslate / clientWidth) {
+    					modifer = 0.8
+    				}
+    				if (i < -tlanslate / clientWidth) {
+    					modifer = 1.2
+    				}
+    				swiper.$el.find('.box').eq(i).transform('translate3d(' + (tlanslate / clientWidth + i) * clientWidth * modifer + 'px, 0, 0)');
+
+    			}
+
+    		}
+    	})
+
+    }
+  </script>
+</body>
+</html>

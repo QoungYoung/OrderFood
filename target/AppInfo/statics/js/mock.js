@@ -1,0 +1,1 @@
+define("detail:widget/credentials_img/mock.js",function(e,i,t){"use strict";t.exports={"-":null}});

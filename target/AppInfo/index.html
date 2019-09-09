@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>登录</title>
+<link type="text/css" rel="stylesheet" href="statics/localcss/normalize.css" />
+<link type="text/css" rel="stylesheet" href="statics/localcss/demo.css" />
+	<script type="text/javascript" src="statics/js/jquery-1.10.1.min.js"></script>
+<!--必要样式-->
+<link type="text/css" rel="stylesheet" href="statics/localcss/component.css" />
+<!--[if IE]>
+<script src="statics/localjs/html5.js"></script>
+<![endif]-->
+</head>
+
+<body>
+<div class="container demo-1">
+	<div class="content">
+		<div id="large-header" class="large-header">
+			<canvas id="demo-canvas"></canvas>
+			<div class="logo_box">
+				<h3>欢迎登录</h3>
+				<h3>${error}</h3>
+				<form id = "login_form" action="login" name="f" method="post">
+					<div class="input_outer">
+						<span class="u_user"></span>
+						<input name="stuNo" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户">
+					</div>
+					<div class="input_outer">
+						<span class="us_uer"></span>
+						<input name="password" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="password" placeholder="请输入密码">
+					</div>
+					<div class="mb2"><a id = "login" class="act-but submit" href="javascript:" style="color: #FFFFFF" onclick="var form = document.getElementById('login_form');
+			form.submit();">登录</a></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+		//登录链接测试，使用时可删除
+		$("#login").click(function(){
+			var form = document.getElementById('login_form');
+			form.submit();
+		});
+</script>
+
+
+<script type="text/javascript" src="statics/localjs/TweenLite.min.js"></script>
+<script type="text/javascript" src="statics/localjs/EasePack.min.js"></script>
+<script type="text/javascript" src="statics/localjs/rAF.js"></script>
+<script type="text/javascript" src="statics/localjs/demo-1.js"></script>
+</body>
+</html>

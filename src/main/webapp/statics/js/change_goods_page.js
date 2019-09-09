@@ -1,0 +1,1 @@
+define("detail:widget/ui/change_goods_page/change_goods_page.js",function(e,o,n){n.exports=function(e,o){var n,s,a=$(e),i=$(o);n=a.filter(".show").attr("index"),s=a.length,i.on("click",function(){a.removeClass("show"),n=++n%s,a.eq(n).addClass("show")})}});

@@ -1,0 +1,1 @@
+define("detail:widget/shop_map/main.js",function(i,a,t){function p(i){e.init(i)}var e=(i("detail:widget/shop_map/shopMap.js"),i("detail:widget/shop_map/MapDialog.js"));t.exports={init:p}});
