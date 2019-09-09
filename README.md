@@ -22,3 +22,5 @@
 ## 还可以在服务器上作什么？
 ####	使用Nexus搭建Maven私服;
 ####	使用Nginx实现负载均衡，使用Redis缓存技术
+### License
+Apache 2.0
